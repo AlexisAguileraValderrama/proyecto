@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <conio.h>
+#include <locale.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#define p printf
+#define s scanf
+
+int x;
+int i = 1;
+int lin = 0;
+char sel[1];
+char ext[100];
+bool salir = false;
+
+struct contacto{
+	char nom[100];
+	char dir[100];
+	char num[100];
+};
+
+main(){
+	setlocale(LC_CTYPE, "spanish");	
+	
+	FILE *archivo;
+	if (fopen("directorio.txt", "r+")==NULL) archivo = fopen("directorio.txt", "w+");
+	else archivo = fopen("directorio.txt", "r+");
+	
+	struct contacto c[10];
+	
+	while( fgets( ext, 100, archivo )) {
+
+		lin++;
+		ext[strlen(ext)-1]=0;
+		if (lin==1) strcpy(c[i].nom ,ext);
+		if (lin==2) strcpy(c[i].dir ,ext);
+		if (lin==3){
+			strcpy(c[i].num ,ext);
+			i++;
+			lin = 0;
+		}
+
+	}
+
+	do{
+
+	p("\tMenú\n");
+	p("1. Ingresar contactos\n");
+	p("2. Borrar contactos\n");
+	p("3. Ver contactos\n");
+	p("4. Salir\n");
+	
+	s("%d", &x);
+	
+	
+	switch(x){
+		
+		case 1:
+			system("cls");
+			gets(sel); //coloque esto aqui por que pasaba algo muy raro que luego les explicaré
+		do{
+			
+			p("Contacto %d \n",i);
+		
+			p("Nombre: ");
+			gets(c[i].nom);
+		
+			p("Dirección: ");
+			gets(c[i].dir);
+		
+			p("Numero telefónico: ");
+			gets(c[i].num);
+			
+			p("\nPara registrar otro contado presione 'S'\n");
+			p("Si quiere ir al menú presione cualquier otro boton\n");
+			x = getche();
+			x = toupper(x);
+			if (x == 'S'){
+				x = 0;
+				system("cls");
+			}else x = 1;
+			
+			i++;
+		}while(x != 1);
+		
+		system("cls");
+			break;
+		case 2:
+			printf("Eliminare");
+			break;
+		case 3:
+			system("cls");
+			for (int a = 1; a <= i-1; a++){
+				p("Contacto %d \n",a);
+				
+				p("Nombre: %s\n",c[a].nom);
+		
+				p("Dirección: %s\n",c[a].dir);
+		
+				p("Numero telefónico: %s \n\n",c[a].num);
+	
+			}
+			p("Presione enter para volver al menú");
+			getch();
+			break;
+		case 4:
+			salir = true;
+			break;
+		default:
+			printf("No existe opción, presiona enter para reiniciar");
+			getch();
+			break;
+			
+	}
+	
+	system("cls");
+	
+	}
+	while(!salir);
+	
+	for (int a = 1; a <= i-1; a++){	
+		fputs(strcat(c[a].nom,"\n"),archivo);
+		
+		fputs(strcat(c[a].dir,"\n"),archivo);
+		
+		fputs(strcat(c[a].num,"\n"),archivo);
+	}
+	
+	fclose(archivo);
+	
+}

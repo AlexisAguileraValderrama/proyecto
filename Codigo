@@ -9,6 +9,7 @@
 
 int x;
 int i = 1;
+int max = 0;
 int lin = 0;
 char sel[1];
 char ext[100];
@@ -23,17 +24,38 @@ struct contacto{
 main(){
 	setlocale(LC_CTYPE, "spanish");	
 	
+	struct contacto c[20];
+	
 	FILE *archivo;
-	if (fopen("directorio.txt", "r+")==NULL) archivo = fopen("directorio.txt", "w+");
-	else archivo = fopen("directorio.txt", "r+");
-	
-	struct contacto c[10];
-	
+	if (fopen("directorio.txt", "r+")==NULL) {
+		archivo = fopen("directorio.txt", "w+");
+		do{
+			p("Un nuevo directorio se ha creado\nFavor de ingresar un maximo de contactos (Maximo 20):");
+			s("%d",&max);
+			if (0<max && max<21) salir = true;
+			else{
+				p("Ingrese un numero valido, entre el 1 y el 20, presione enter para reintentar");
+				getch();
+				system("cls");
+			}
+		}while(!salir);
+		system("cls");
+		salir = false;
+	}
+	else {
+	archivo = fopen("directorio.txt", "r+");
 	while( fgets( ext, 100, archivo )) {
-
+		
 		lin++;
 		ext[strlen(ext)-1]=0;
-		if (lin==1) strcpy(c[i].nom ,ext);
+		if (lin==1) 
+		{
+			if (max==0) {
+			max = atoi(ext);
+			lin = 0;
+			}
+			else strcpy(c[i].nom ,ext);
+		}	
 		if (lin==2) strcpy(c[i].dir ,ext);
 		if (lin==3){
 			strcpy(c[i].num ,ext);
@@ -41,12 +63,16 @@ main(){
 			lin = 0;
 		}
 	}
+	}
 	
 	if (i!=1){
 		fclose(archivo);
 		remove("directorio.txt");
 		archivo = fopen("directorio.txt", "w+");
-		p("No. de contactos encontrados: %d \n", i-1);
+		p("El directorio tiene un maximo de: %d\n",max);
+		p("No. de contactos encontrados en el directorio: %d \n", i-1);
+	} else{
+		p("El directorio nuevo tiene un maximo de: %d\n",max);
 	}
 
 	do{
@@ -59,14 +85,14 @@ main(){
 	
 	s("%d", &x);
 	
+	system("cls");
 	
 	switch(x){
 		
 		case 1:
-			system("cls");
 			gets(sel); //coloque esto aqui por que pasaba algo muy raro que luego les explicaré
 		do{
-			
+			if (i-1!=max){
 			p("Contacto %d \n",i);
 		
 			p("Nombre: ");
@@ -88,13 +114,14 @@ main(){
 			}else x = 1;
 			
 			i++;
+		}else {
+			p("El maximo de %d contactos se ha alcanzado, favor de borrar contactos\nPresione enter para continuar",max);
+			getch();
+			x = 1;
+		}
 		}while(x != 1);
-		
-		system("cls");
 			break;
 		case 2:
-			
-			system("cls");
 			for (int a = 1; a < i; a++){
 				
 				p("Contacto %d \n",a);
@@ -130,7 +157,6 @@ main(){
 			
 			break;
 		case 3:
-			system("cls");
 			for (int a = 1; a < i; a++){
 				
 				p("Contacto %d \n",a);
@@ -162,6 +188,10 @@ main(){
 	while(!salir);
 	
 	for (int a = 1; a < i; a++){	
+	
+		fprintf(archivo, "%d",max);
+		fputs("\n",archivo);
+	
 		fputs(strcat(c[a].nom,"\n"),archivo);
 		
 		fputs(strcat(c[a].dir,"\n"),archivo);

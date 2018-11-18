@@ -74,6 +74,8 @@ main(){
 	} else{
 		p("El directorio nuevo tiene un maximo de: %d\n",max);
 	}
+	
+	p("--------------------------------------------------------\n");
 
 	do{
 
@@ -187,10 +189,10 @@ main(){
 	}
 	while(!salir);
 	
-	for (int a = 1; a < i; a++){	
+	fprintf(archivo, "%d",max);
+	fputs("\n",archivo);
 	
-		fprintf(archivo, "%d",max);
-		fputs("\n",archivo);
+	for (int a = 1; a < i; a++){	
 	
 		fputs(strcat(c[a].nom,"\n"),archivo);
 		

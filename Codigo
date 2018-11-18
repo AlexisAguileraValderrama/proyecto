@@ -40,7 +40,13 @@ main(){
 			i++;
 			lin = 0;
 		}
-
+	}
+	
+	if (i!=1){
+		fclose(archivo);
+		remove("directorio.txt");
+		archivo = fopen("directorio.txt", "w+");
+		p("No. de contactos encontrados: %d \n", i-1);
 	}
 
 	do{
@@ -72,7 +78,7 @@ main(){
 			p("Numero telefónico: ");
 			gets(c[i].num);
 			
-			p("\nPara registrar otro contado presione 'S'\n");
+			p("\nPara registrar otro contacto presione 'S'\n");
 			p("Si quiere ir al menú presione cualquier otro boton\n");
 			x = getche();
 			x = toupper(x);
@@ -87,11 +93,46 @@ main(){
 		system("cls");
 			break;
 		case 2:
-			printf("Eliminare");
+			
+			system("cls");
+			for (int a = 1; a < i; a++){
+				
+				p("Contacto %d \n",a);
+				
+				p("Nombre: %s\n",c[a].nom);
+		
+				p("Dirección: %s\n",c[a].dir);
+		
+				p("Numero telefónico: %s \n",c[a].num);
+				
+				p("\nPara eliminar al contacto presione 'E'\n");
+				p("Si quiere ir con el siguiente contacto aprete otro boton\n");
+				x = getche();
+				x = toupper(x);
+				if (x == 'E'){
+					for (int y = a; y < i; y++){
+						strcpy(c[y].nom, c[y+1].nom);
+						strcpy(c[y].dir, c[y+1].dir);
+						strcpy(c[y].num, c[y+1].num);
+					}
+					i--;
+					a--;
+					p("\nContacto borrado exitosamente, presione enter para continuar\n");
+					getch();
+				}
+				system("cls");
+	
+			}
+			
+			if (i==1)p("No hay contactos que borrar, presione enter para regresar al menú");
+			else p("Se termino la lista de contactos, presione enter para regresar al menu");
+			getch();
+			
 			break;
 		case 3:
 			system("cls");
-			for (int a = 1; a <= i-1; a++){
+			for (int a = 1; a < i; a++){
+				
 				p("Contacto %d \n",a);
 				
 				p("Nombre: %s\n",c[a].nom);
@@ -101,7 +142,8 @@ main(){
 				p("Numero telefónico: %s \n\n",c[a].num);
 	
 			}
-			p("Presione enter para volver al menú");
+			if (i==1) p("No hay contactos por revisar, presione enter para regresar al menú");
+			else p("Presione enter para volver al menú");
 			getch();
 			break;
 		case 4:
@@ -119,7 +161,7 @@ main(){
 	}
 	while(!salir);
 	
-	for (int a = 1; a <= i-1; a++){	
+	for (int a = 1; a < i; a++){	
 		fputs(strcat(c[a].nom,"\n"),archivo);
 		
 		fputs(strcat(c[a].dir,"\n"),archivo);
